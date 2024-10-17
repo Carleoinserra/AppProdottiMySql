@@ -19,11 +19,16 @@ public class Negozio {
 		  * 
 		  * 
 		  */
+		 
+		 // Effettuiamo una connessione indicando quali sono le configurazioni per rragiungere il nostro database
 		 String url = "jdbc:mysql://localhost:3306/mydb";
 	        String username = "root";
 	        String password = "Ilfoggia1";
 	        Connection connection = null;
 		 
+	        
+	        // creiamo un arraylist di prodotti che ci consentirà di stampare il riepilogo dei prodotti acquistati
+	        // Per il tipo prodotto vedere la classe prodotto
 		 ArrayList <Prodotto> listaProdotti = new ArrayList <>();
 		 
 		 
@@ -33,12 +38,19 @@ public class Negozio {
 			 Scanner input = new Scanner (System.in);
 			 
 			 scelta = input.nextInt();
+			 
+			 // se la scelta è 1 vengono stampati tutti i prodotti
 			 if (scelta == 1) {
 				 
-				// Stampa tutti i prodotti
+				// Creiamo una connessione chimando il metodo getConnection sul driver e passando i dati di configurazione
                  connection = DriverManager.getConnection(url, username, password);
                  String selectQuery = "SELECT * FROM prodotti";
+                 
+                 // creiamo uno statement semplice: in questo caso non sarà un prepared statement perchè non abbiamo segnaposto
                  Statement stmt2 = connection.createStatement();
+                 
+                 // Eseguiamo la query sullo statementm passando la query come parametro al metodo execute query
+                 // il risultato di questa query restituisce un result set
                  ResultSet rs = stmt2.executeQuery(selectQuery);
 
                  while (rs.next()) {
@@ -52,7 +64,10 @@ public class Negozio {
 				 
 				 
 			 }
-			 
+			 /*
+			  * Se la scelta è due chiediamo il prodotto che si vuole acquistare
+			  * andiamo a selezionare quel prodotto, lo aggiungiamo ad una lista
+			  */
 			 else if (scelta == 2) {
 				 
 				 Scanner input1 = new Scanner (System.in);
@@ -63,15 +78,26 @@ public class Negozio {
 				 
 				 
 				 
+				 // query per selezionare un prodotto in base al nome
+				 
                  String selectQuery = "SELECT * FROM prodotti WHERE nome = (?)";
                  
                  
-                 
+                 // creiamo un oggetto prepared statement che ci serve per eseguire una query con i segnaposto
                  PreparedStatement stmt = connection.prepareStatement(selectQuery);
+                 // settiamo la stringa del segnaposto
                  stmt.setString(1,nome);
                  
+                 // la query restituisce una struttura dati result Set
                  ResultSet rs = stmt.executeQuery();
                  
+                 
+                 /* andiamo a iterare il resultset
+                  * Fino a quando ci sono elementi recuperiamo nome, marca e categoria e prezzo
+                  * Stampiamo il prodotto acquistato
+                  * Aggingiamo il prodotto già instanziato con i valori del resultset nella lista dei prodotti
+                  * 
+                  * */
                  while(rs.next()) {
                 	 
                 	String nome1 = rs.getString("nome");
@@ -89,6 +115,13 @@ public class Negozio {
 		 }
 		 
 		 while (scelta != 0);
+		 
+		 /* 
+		  * Fuori dal do while creimao una variabile somma che ci servirà a stampare la somma dei prezzi dei prodotti
+		  * 
+		  * Scorriamo la lista dei prodotti, stampiamo i prodotti acquistati e incrementiamo la variabile somma con i prezzi
+		  * 
+		  */
 		 int somma = 0;
 		 System.out.println("Riepilogo ordine: ");
 		 
@@ -97,7 +130,7 @@ public class Negozio {
 			 System.out.println(p1);
 			 somma += p1.prezzo;
 		 }
-		 
+		 // stampiamo il totale
 		 System.out.println("Il totale da pagare è "  + somma);
 		 
 		 

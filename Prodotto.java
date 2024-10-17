@@ -1,6 +1,14 @@
 
 public class Prodotto {
 	
+	
+	/*
+	 * La classe prodotto, ci servirà per avere un carrello dei prodotti acquistati
+	 * Le proprietà della classe sono esattamente speculari alle colonne della tebella mysql prodotti
+	 * Definiamo anche un toString() che ci servirà per stampare i prodotti
+	 * 
+	 * 
+	 */
 	String nome;
 	String marca;
 	String categoria;
